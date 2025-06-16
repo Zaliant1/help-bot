@@ -58,8 +58,11 @@ setInterval(loadKeywords, 10 * 60 * 1000);
 
 const spoilerWatchMap = new Map();
 
+const allowedChannelIds = Object.keys(channelKeywordSources);
+
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
+  if (!allowedChannelIds.includes(message.channelId)) return;
 
   const keywords = keywordMap.get(message.channelId);
   if (!keywords) return;
@@ -81,6 +84,7 @@ client.on(Events.MessageCreate, async (message) => {
     keywords: unspoileredKeywords,
   });
 });
+
 
 client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
   if (!spoilerWatchMap.has(newMessage.id)) return;
