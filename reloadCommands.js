@@ -1,16 +1,14 @@
-const { fetchKeywords } = require('./_utils');
-
 module.exports = {
   name: 'reloadkeywords',
   description: 'Reload keywords for a specified channel',
-  async execute(message, args, keywordMap, channelKeywordSources) {
+  async execute(message, args, keywordMap, channelKeywordSources, fetchKeywords) {
     if (!message.member.permissions.has('ManageGuild')) {
       return message.reply("🚫 You don't have permission to reload keywords.");
     }
 
     const channelMention = args[0];
     if (!channelMention) {
-      return message.reply("❗ Please mention a channel, e.g. `!reloadkeywords #general`");
+      return message.reply("❗ Please mention a channel, e.g. `!reloadkeywords #hk-help`");
     }
 
     const channelIdMatch = channelMention.match(/^<#(\d+)>$/);

@@ -1,5 +1,7 @@
-const { Client, GatewayIntentBits, Events } = require('discord.js');
 require('dotenv').config();
+const reloadCommand = require('./reloadCommands.js');
+const contributeCommand = require('./contributeCommand.js');
+const { Client, GatewayIntentBits, Events } = require('discord.js');
 const { findAllMatchedKeywords, promptAndDelete } = require('./utils.js');
 
 const client = new Client({
@@ -15,6 +17,9 @@ const channelKeywordSources = {
 };
 
 const keywordMap = new Map();
+const commands = new Map();
+commands.set(reloadCommand.name, reloadCommand);
+commands.set(contributeCommand.name, contributeCommand);
 
 const fetchKeywords = async (url) => {
   const extractKeywordsFromJson = (data) => {
@@ -62,7 +67,38 @@ const allowedChannelIds = Object.keys(channelKeywordSources);
 
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
+
   if (!allowedChannelIds.includes(message.channelId)) return;
+
+  const prefix = '!';
+  if (message.content.startsWith(prefix)) {
+    const args = message.content.slice(prefix.length).trim().split(/\s+/);
+    const commandName = args.shift().toLowerCase();
+
+    const command = commands.get(commandName);
+    if (!command) return;
+
+    if (commandName === 'reloadkeywords') {
+      try {
+        await reloadCommand.execute(message, args, keywordMap, channelKeywordSources, fetchKeywords);
+      } catch (error) {
+        console.error('Error executing reloadkeywords command:', error);
+        message.reply('❌ There was an error running that command.');
+      }
+      return;
+    }
+
+
+    if (commandName === 'contribute') {
+      try {
+        await contributeCommand.execute(message, args);
+      } catch (error) {
+        console.error('Error executing contribute command:', error);
+        message.reply('❌ There was an error running that command.');
+      }
+      return;
+    }
+  }
 
   const keywords = keywordMap.get(message.channelId);
   if (!keywords) return;
