@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits, Events } = require('discord.js');
 require('dotenv').config();
-const { findAllMatchedKeywords, promptAndDelete } = require('./src/utils.js');
+const { findAllMatchedKeywords, promptAndDelete } = require('./utils.js');
 
 const client = new Client({
   intents: [

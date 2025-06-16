@@ -1,4 +1,4 @@
-const { fetchKeywords } = require('../_utils');
+const { fetchKeywords } = require('./_utils');
 
 module.exports = {
   name: 'reloadkeywords',
