@@ -110,9 +110,11 @@ client.on(Events.MessageUpdate, async (oldMessage, newMessage) => {
   } else {
     try {
       const oneMinuteLater = Math.floor((message.createdTimestamp + 60 * 1000) / 1000);
+
       await prompt.edit(
-        `⚠️ Please spoiler-tag the following keywords by surrounding them \\|\\|like this\\|\\|:\n**${stillUnspoilered.join(', ')}**\nYou have until <t:${oneMinuteLater}:R> to edit your message.`
+        `⚠️ Please spoiler-tag the following keywords by surrounding them \\|\\|like this\\|\\|:\n${stillUnspoilered.map(words => `||${words}||`).join(', ')}\nYour message will be deleted <t:${oneMinuteLater}:R> unless spoilers are resolved.`
       );
+
       watchData.keywords = stillUnspoilered;
     } catch (error) {
       console.error('Failed to edit prompt:', error);

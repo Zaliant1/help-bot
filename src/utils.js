@@ -27,7 +27,7 @@ async function promptAndDelete(message, keywords) {
   const oneMinuteLater = Math.floor((message.createdTimestamp + 60 * 1000) / 1000);
 
   const prompt = await message.reply(
-    `⚠️ Please spoiler-tag the following keywords by surrounding them \\|\\|like this\\|\\|:\n**${keywords.join(', ')}**\nYou have until <t:${oneMinuteLater}:R> to edit your message.`
+    `⚠️ Please spoiler-tag the following keywords by surrounding them \\|\\|like this\\|\\|:\n**${keywords.map(words => `||${words}||`).join(', ')}**\nYour message will be deleted <t:${oneMinuteLater}:R> unless spoilers are resolved.`
   );
 
   const timeout = setTimeout(async () => {
